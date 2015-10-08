@@ -16,7 +16,9 @@
            [cascading.tap Tap]
            [cascading.flow FlowDef]
            [cascalog.cascading.types ClojureFlow]
-           [cascading.flow.hadoop HadoopFlow HadoopFlowConnector]))
+           [com.dataartisans.flink.cascading.planner FlinkFlow]
+           [com.dataartisans.flink.cascading FlinkConnector]
+    ))
 
 ;; ## Stats
 
@@ -48,10 +50,10 @@
     (.addTraps trap-map)
     (.addTails (into-array Pipe tails))))
 
-(s/defn compile-hadoop :- HadoopFlow
+(s/defn compile-hadoop :- FlinkFlow
   "Compiles the supplied FlowDef into a Hadoop flow."
   [fd :- FlowDef]
-  (-> (HadoopFlowConnector.
+  (-> (FlinkConnector.
        (conf/project-merge (conf/project-conf)
                            {"cascading.flow.job.pollinginterval" 10}))
       (.connect fd)))
@@ -78,7 +80,7 @@
   cascalog.cascading.stats/StatsMap."))
 
 (extend-protocol IRunnable
-  HadoopFlow
+  FlinkFlow
   (run! [flow]
     (.complete flow)
     (handle-stats!
@@ -115,7 +117,7 @@
   (let [flow (apply compile-flow args)]
     (flow-def flow)))
 
-(s/defn jcompile-flow :- HadoopFlow
+(s/defn jcompile-flow :- FlinkFlow
   [& args]
   (compile-hadoop (apply jflow-def args)))
 

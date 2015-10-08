@@ -14,7 +14,7 @@
            [cascalog.ops KryoInsert]
            [cascading.operation Identity Debug NoOp]
            [cascading.operation.filter Sample FilterNull]
-           [cascading.operation.aggregator First Count Sum Min Max]
+           ;[cascading.operation.aggregator First Count Sum Min Max]
            [cascading.pipe Pipe Each Every GroupBy CoGroup Merge HashJoin Checkpoint]
            [cascading.pipe.joiner Joiner InnerJoin LeftJoin RightJoin OuterJoin]
            [cascading.pipe.joiner CascalogJoiner CascalogJoiner$JoinType]

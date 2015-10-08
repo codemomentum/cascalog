@@ -10,7 +10,7 @@
            [cascading.tuple TupleEntryCollector]
            [cascading.scheme Scheme]
            [cascading.scheme.hadoop TextLine TextLine$Compress SequenceFile TextDelimited]
-           [cascading.flow.hadoop HadoopFlowProcess]
+           [com.dataartisans.flink.cascading.runtime.util FlinkFlowProcess]
            [cascading.tuple Fields Tuple TupleEntry]
            [com.twitter.maple.tap StdoutTap MemorySourceTap]))
 
@@ -238,17 +238,17 @@ identity.  identity."
 ;; ## Tap Helpers
 
 (defn pluck-tuple [^Tap tap]
-  (with-open [it (-> (HadoopFlowProcess. (hadoop/job-conf (conf/project-conf)))
+  (with-open [it (-> (FlinkFlowProcess. (hadoop/configuration (conf/project-conf)))
                      (.openTapForRead tap))]
     (if-let [iter (iterator-seq it)]
       (-> iter first .getTuple Tuple. Util/coerceFromTuple vec)
       (throw-illegal "Cascading tap is empty -- tap must contain tuples."))))
 
 (defn get-sink-tuples [^Tap sink]
-  (let [conf (hadoop/job-conf (conf/project-conf))]
+  (let [conf (hadoop/configuration (conf/project-conf))]
     (cond (map? sink) (get-sink-tuples (:sink sink))
           (not (.resourceExists sink conf)) []
-          :else (with-open [it (-> (HadoopFlowProcess. conf)
+          :else (with-open [it (-> (FlinkFlowProcess. conf)
                                    (.openTapForRead sink))]
                   (doall
                    (for [^TupleEntry t (iterator-seq it)]
@@ -256,8 +256,8 @@ identity.  identity."
 
 (defn fill-tap! [^Tap tap xs]
   (with-open [^TupleEntryCollector collector
-              (-> (hadoop/job-conf (conf/project-conf))
-                  (HadoopFlowProcess.)
+              (-> (hadoop/configuration (conf/project-conf))
+                  (FlinkFlowProcess.)
                   (.openTapForWrite tap))]
     (doseq [item xs]
       (.add collector (Util/coerceToTuple item)))))

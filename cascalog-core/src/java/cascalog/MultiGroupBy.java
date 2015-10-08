@@ -26,7 +26,7 @@ import java.util.UUID;
 import org.apache.hadoop.io.compress.CompressionCodec;
 import org.apache.log4j.Logger;
 
-import cascading.flow.hadoop.HadoopCoGroupClosure;
+import com.dataartisans.flink.cascading.runtime.coGroup.bufferJoin.CoGroupBufferClosure;
 import cascading.operation.BaseOperation;
 import cascading.operation.Identity;
 import cascading.pipe.CoGroup;
@@ -62,7 +62,7 @@ public class MultiGroupBy extends SubAssembly {
     }
 
     public void emit(Tuple result) {
-      Tuple ret = new Tuple(((HadoopCoGroupClosure) _closure).getGrouping());
+      Tuple ret = new Tuple(((CoGroupBufferClosure) _closure).getGrouping());
       ret.addAll(result);
       while (ret.size() < _pipeFieldsSum) {
         ret.add(0);
