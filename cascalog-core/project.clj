@@ -1,9 +1,9 @@
 (def ROOT-DIR (subs *file* 0 (- (count *file*) (count "project.clj"))))
 (def HADOOP-VERSION (-> ROOT-DIR (str "/../HADOOP-VERSION") slurp))
-(def VERSION "3.0.0-SNAPSHOT")
+(def VERSION "3.0.0-flink-SNAPSHOT")
 (def CC-VERSION (or (System/getenv "CASCALOG_CASCADING_VERSION") "3.1.0-wip-16"))
 
-(defproject cascalog/cascalog-core-flink VERSION
+(defproject cascalog/cascalog-core VERSION
   :description "Cascalog core libraries."
   :url "http://www.cascalog.org"
   :license {:name "Eclipse Public License"
