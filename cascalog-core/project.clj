@@ -1,6 +1,6 @@
 (def ROOT-DIR (subs *file* 0 (- (count *file*) (count "project.clj"))))
 (def HADOOP-VERSION (-> ROOT-DIR (str "/../HADOOP-VERSION") slurp))
-(def VERSION "3.0.0-flink-SNAPSHOT")
+(def VERSION "3.0.0-flink")
 (def CC-VERSION (or (System/getenv "CASCALOG_CASCADING_VERSION") "3.1.0-wip-16"))
 
 (defproject cascalog/cascalog-core VERSION
@@ -51,7 +51,7 @@
                  [org.clojure/tools.macro "0.1.2"]
                  [log4j "1.2.16"]
                  [org.slf4j/slf4j-log4j12 "1.6.6"]
-                 [com.dataArtisans/cascading-flink "0.1"]
+                 [com.data-artisans/cascading-flink "0.1-cascalog"]
                  [com.twitter/chill-hadoop "0.3.5"]
                  [com.twitter/carbonite "1.4.0"]
                  [com.twitter/maple "0.2.2"]
